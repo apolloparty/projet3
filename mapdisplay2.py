@@ -18,7 +18,7 @@ def items():
         #maps = maps.read()
         maps = list(maps)
         #randomisation 
-        while i != 305:
+        while i != 239:
                 if maps[i] == " ":
                         space_list.append(i)
                         i = i + 1
@@ -51,15 +51,14 @@ def motion():
         move = input('Entrez ZQSD pour vous déplacer : ')
         position = maps.index("M")
         if move == "Z" or move == "z":
-            if maps[position - 18] == " ":
-                maps[position - 18] = "M"
+            if maps[position - 16] == " ":
+                maps[position - 16] = "M"
                 maps[position] = " "
                 maps = "".join(maps)
                 print(maps)
                 maps = list(maps)
-            elif move == "Z" or move == "z":
-                maps[position - 18] == maps[item_position[[1], [2], [3]]]
-                maps[position - 18] = "M"
+            elif maps[position - 16] == maps[item_position[[1], [2], [3]]]:
+                maps[position - 16] = "M"
                 j = j + 1
                 print(j)
                 maps[position] = " "
@@ -71,15 +70,15 @@ def motion():
                 print(maps)
                 maps = list(maps)
         if move == "S" or move == "s":
-            if maps[position + 18] == " ":
-                maps[position + 18] = "M"
+            if maps[position + 16] == " ":
+                maps[position + 16] = "M"
                 maps[position] = " "
                 maps = "".join(maps)
                 print(maps)
                 maps = list(maps)
             elif move == "S" or move == "s":
-                maps[position - 18] == maps[item_position[[1], [2], [3]]]
-                maps[position + 18] = "M"
+                maps[position - 16] == maps[item_position[[1], [2], [3]]]
+                maps[position + 16] = "M"
                 j = j + 1
                 print(j)
                 maps[position] = " "
@@ -98,7 +97,7 @@ def motion():
                 print(maps)
                 maps = list(maps)
             elif move == "D" or move == "d":
-                maps[position - 18] == maps[item_position[[1], [2], [3]]]
+                maps[position - 16] == maps[item_position[[1], [2], [3]]]
                 maps[position + 1] = "M"
                 j = j + 1
                 print(j)
@@ -118,7 +117,7 @@ def motion():
                 print(maps)
                 maps = list(maps)
             elif move == "Q" or move == "q":
-                maps[position - 18] == maps[item_position[[1], [2], [3]]]
+                maps[position - 16] == maps[item_position[[1], [2], [3]]]
                 maps[position - 1] = "M"
                 j = j + 1
                 print(j)

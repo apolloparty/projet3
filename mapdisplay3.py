@@ -1,119 +1,86 @@
 import random
 
-def mapping():
-    with open("maplabyrinthe.txt") as m:
-        maps = m.read()
-        return maps
-
-def items():
-        maps = mapping()
-        i = 0
-        f = 0
-        space_count = 0
-        space_list = ""
-        space_list = list(space_list)
-        maps = list(maps)
-        #randomisation 
-        while i != 305:
-                if maps[i] == " ":
-                        space_list.append(i)
-                        i = i + 1
-                else:
-                        i = i + 1
-        space_rand = random.randint(0, len(space_list) - 1)
-        X = space_list[space_rand]
-        maps[X] = "X"
-        space_rand = random.randint(0, len(space_list) - 1)
-        Y = space_list[space_rand]
-        maps[Y] = "Y"
-        space_rand = random.randint(0, len(space_list) - 1)
-        Z = space_list[space_rand]
-        maps[Z] = "Z"
+class Map_init:
+    
+    def __init__(self, maps, space_list):
+            self.maps = maps
+            self.space_list = space_list
+    
+    def items_position(self):
+        space_rand = random.randint(0, len(self.space_list) - 1)
+        X = self.space_list[space_rand]
+        self.maps[X] = "X"
+        space_rand = random.randint(0, len(self.space_list) - 1)
+        Y = self.space_list[space_rand]
+        self.maps[Y] = "Y"
+        space_rand = random.randint(0, len(self.space_list) - 1)
+        Z = self.space_list[space_rand]
+        self.maps[Z] = "Z"
         #item_position = [value_x, value_y, value_z]
-        maps = "".join(maps)
-        maps = list(maps)
-        return maps, X, Y, Z
+        self.maps = "".join(self.maps)
+        #self.maps = list(self.maps)
+        print(self.maps)
 
-def motion():
-    maps, X, Y, Z = items()
-    maps = "".join(maps)
-    #print(item_position)
-    print(maps)
-    maps = list(maps)
+class Motion:
 
-    while 1:
-        move = input('Entrez ZQSD pour vous déplacer : ')
+    def __init__(self, move, maps):
+        self.move = move
+        self.maps = maps
+
+    def input_user(self):
+        if self.move == "Z" or self.move == "z":
+            if self.maps[position - 16] == " ":
+                self.maps[position - 16] = "M"
+                self.maps[position] = " "
+                self.maps = "".join(self.maps)
+                print(self.maps)
+                self.maps = list(self.maps)
+            elif self.maps[position - 16] == self.maps[X] or self.maps[position - 16] == self.maps[Y] or self.maps[position - 18] == self.maps[Z]:
+                self.maps[position - 16] = "M"
+                self.maps[position] = " "
+                self.maps = "".join(self.maps)
+                print(self.maps)
+                self.maps = list(self.maps)
+            else:
+                self.maps = "".join(self.maps)
+                print(self.maps)
+                self.maps = list(self.maps)
+
+    def mac(self):
         position = maps.index("M")
 
-        if move == "Z" or move == "z":
-            if maps[position - 18] == " ":
-                maps[position - 18] = "M"
-                maps[position] = " "
-                maps = "".join(maps)
-                print(maps)
-                maps = list(maps)
-            elif maps[position - 18] == maps[X] or maps[position - 18] == maps[Y] or maps[position - 18] == maps[Z]:
-                maps[position - 18] = "M"
-                maps[position] = " "
-                maps = "".join(maps)
-                print(maps)
-                maps = list(maps)
-            else:
-                maps = "".join(maps)
-                print(maps)
-                maps = list(maps)
-        if move == "S" or move == "s":
-            if maps[position + 18] == " ":
-                maps[position + 18] = "M"
-                maps[position] = " "
-                maps = "".join(maps)
-                print(maps)
-                maps = list(maps)
-            elif maps[position + 18] == maps[X] or maps[position + 18] == maps[Y] or maps[position + 18] == maps[Z]:
-                maps[position + 18] = "M"
-                maps[position] = " "
-                maps = "".join(maps)
-                print(maps)
-                maps = list(maps)
-            else:
-                maps = "".join(maps)
-                print(maps)
-                maps = list(maps)
-        if move == "D" or move == "d":
-            if maps[position + 1] == " ":
-                maps[position + 1] = "M"
-                maps[position] = " "
-                maps = "".join(maps)
-                print(maps)
-                maps = list(maps)
-            elif maps[position + 1] == maps[X] or maps[position + 1] == maps[Y] or maps[position + 1] == maps[Z]:
-                maps[position + 1] = "M"
-                maps[position] = " "
-                maps = "".join(maps)
-                print(maps)
-                maps = list(maps)
-            else:
-                maps = "".join(maps)
-                print(maps)
-                maps = list(maps)
-        if move == "Q" or move == "q":
-            if maps[position - 1] == " ":
-                maps[position - 1] = "M"
-                maps[position] = " "
-                maps = "".join(maps)
-                print(maps)
-                maps = list(maps)
-            elif maps[position - 1] == maps[X] or maps[position - 1] == maps[Y] or maps[position - 1] == maps[Z]:
-                maps[position - 1] = "M"
-                maps[position] = " "
-                maps = "".join(maps)
-                print(maps)
-                maps = list(maps)
-            else:
-                maps = "".join(maps)
-                print(maps)
-                maps = list(maps)
+def open_map():
+        with open("maplabyrinthe.txt") as m:
+            maps = m.read()
+            return maps
 
-mapping()
-items()
-motion()
+def random_count(maps):
+    i = 0
+    f = 0    
+    space_count = 0
+    space_list = ""
+    space_list = list(space_list)
+    maps = list(maps)
+    while i != 239:
+            if maps[i] == " ":
+                    space_list.append(i)
+                    i = i + 1
+            else:
+                        i = i + 1
+    return maps, space_list
+
+def motion_value():
+    move = input("Entrez ZQSD pour vous déplacer : ")
+    return move
+
+
+def main():
+    maps = open_map()
+    maps, space_list = random_count(maps)
+    move = motion_value()
+    motion = Motion(move, maps)
+    mapping = Map_init(maps, space_list)
+   #print(mapping.items_position())
+    print(motion.input_user())
+
+main()
