@@ -1,4 +1,6 @@
 import random
+import pygame
+from pygame.locals import *
 
 class Input_user:
 
@@ -11,7 +13,7 @@ class Input_user:
 
 entry = Input_user()
 
-class Mcgyver:
+class Characters:
 
     def __init__(self, maps):
         self.maps = maps
@@ -20,6 +22,10 @@ class Mcgyver:
         position = self.maps.index("M")
         #print(position)
         return position
+
+    def tina_position(self):
+        positiontina = self.maps.index("T")
+        return positiontina
 #mac = Mcgyver()
 
 class Motion:
@@ -118,8 +124,10 @@ class Items:
         Z = space_list[space_rand]
         maps[Z] = "Z"
         maps = "".join(maps)
-        print(X, Y, Z)
+        #print(X, Y, Z)
         return X, Y, Z
+    
+    #def item_coord(self):
 
 class Collect:
 
@@ -172,6 +180,67 @@ class Tina:
         else:
             pass
 
+#class Graphic:
+
+#def __init__(self):
+class Calc:
+    def __init__(self, position, positiontina, X, Y, Z):
+        self.position = position
+        self.positiontina = positiontina
+        self.X = X
+        self.Y = Y
+        self.Z = Z
+
+    def coordinates_mac(self):
+        position = self.position
+
+        macy = int(position / 16)
+        macx = position - 16 * macy
+        maccoord = (macx, macy)
+
+        return maccoord
+
+    def coordinates_tina(self):
+        positiontina = self.positiontina
+
+        tinay = int((positiontina) / 16)
+        tinax = positiontina - 16 * tinay
+        tinacoord = (tinax, tinay)
+
+        return tinacoord
+
+    def coordinates_items(self):
+        X = self.X
+        Y = self.Y
+        Z = self.Z
+
+        XY = int(X / 16)
+        XX = X - 16 * XY
+        YY = int(Y / 16)
+        YX = X - 16 * YY
+        ZY = int(Z / 16)
+        ZX = X - 16 * ZY
+        Xcoord = (XX, XY)
+        Ycoord = (YX, YY)
+        Zcoord = (ZX, ZY)
+
+        return Xcoord, Ycoord, Zcoord
+
+
+
+
+class Pygame:
+
+    def __init__(maccoord, tinacoord, Xcoord, Ycoord, Zcoord):
+        self.maccoord = maccoord
+        self.tinacoord = tinacoord
+        self.Xcoord = Xcoord
+        self.Ycoord = Ycoord
+        self.zcoord = Zcoord
+
+    def mapping():
+        pygame.init()
+        window = pygame.display.set_mode((480, 480), RESIZABLE)
 
 def open_map():
     with open("maplabyrinthe.txt") as file:
@@ -183,37 +252,40 @@ def open_map():
 
 def random_count(maps):
     i = 0
-    f = 0    
+    j = 0    
     space_count = 0
-    space_list = ""
-    space_list = list(space_list)
+    space_list = []
+    wall_list = []
     maps = list(maps)
 
-    while i != 239:
+    while i != len(maps):
             if maps[i] == " ":
-                    space_list.append(i)
-                    i = i + 1
+                space_list.append(i)
+                i = i + 1
+            elif maps[i] == "#":
+                wall_list.append(i)
+                i = i + 1
             else:
-                    i = i + 1
+                i = i + 1
     return space_list
 
 def main():
     maps = open_map()
     space_list = random_count(maps)
+    position = Characters(maps).mc_position()
+    positiontina = Characters(maps).tina_position()
     X, Y, Z = Items(maps, space_list).item_position()
+    #print(Items(maps, space_list).item_coord())
     print("".join(maps))
     while 1:
         move = entry.entry_user()
-        position = Mcgyver(maps).mc_position()
+        position = Characters(maps).mc_position()
         tina = Tina(X, Y, Z, maps).tina_ready()
         Motion(maps, position, move, tina).direction()
-        position = Mcgyver(maps).mc_position()
-        X, Y, Z = Collect(position, X, Y, Z).collect_items()
-        #tina = Tina(X, Y, Z, maps).tina_ready()
+        position = Characters(maps).mc_position()
         #print(position)
-        #print(maps.index("M"))
+        X, Y, Z = Collect(position, X, Y, Z).collect_items()
+        print(Calc(position, positiontina, X, Y, Z).coordinates_mac())
 
 
 main()
-#Mcgyver()
-#print(mac.input_user())
