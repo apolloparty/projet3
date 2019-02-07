@@ -231,16 +231,31 @@ class Calc:
 
 class Pygame:
 
-    def __init__(maccoord, tinacoord, Xcoord, Ycoord, Zcoord):
+    def __init__(self, maps, maccoord, tinacoord, Xcoord, Ycoord, Zcoord):
+        self.maps = maps
         self.maccoord = maccoord
         self.tinacoord = tinacoord
         self.Xcoord = Xcoord
         self.Ycoord = Ycoord
         self.zcoord = Zcoord
 
-    def mapping():
+    def mapping(self):
+        maps = self.maps
         pygame.init()
         window = pygame.display.set_mode((480, 480), RESIZABLE)
+        space = pygame.image.load("ressource/espace.png").convert()
+        self.position_space = space.get_rect()
+        wall = pygame.image.load("ressource/mur.png").convert()
+        self.position_wall = wall.get_rect()
+        itemX = pygame.image.load("ressource/item1.png").convert()
+        self.disX = itemX.get_rect()
+        itemY = pygame.image.load("ressource/item2.png").convert()
+        self.disY = itemY.get_rect()
+        itemZ = pygame.image.load("ressource/item3.png").convert()
+        self.disZ = itemZ.get_rect()
+    
+    #def graphics(self):
+
 
 def open_map():
     with open("maplabyrinthe.txt") as file:
@@ -275,6 +290,9 @@ def main():
     position = Characters(maps).mc_position()
     positiontina = Characters(maps).tina_position()
     X, Y, Z = Items(maps, space_list).item_position()
+    Xcoord, Ycoord, Zcoord = Calc(position, positiontina, X, Y, Z).coordinates_items()
+    maccoord = Calc(position, positiontina, X, Y, Z).coordinates_mac()
+    tinacoord = Calc(position, positiontina, X, Y, Z).coordinates_tina()
     #print(Items(maps, space_list).item_coord())
     print("".join(maps))
     while 1:
@@ -286,6 +304,7 @@ def main():
         #print(position)
         X, Y, Z = Collect(position, X, Y, Z).collect_items()
         print(Calc(position, positiontina, X, Y, Z).coordinates_mac())
+        Pygame(maps, maccoord, tinacoord, Xcoord, Ycoord, Zcoord).mapping()
 
 
 main()
