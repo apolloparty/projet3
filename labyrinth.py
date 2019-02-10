@@ -8,10 +8,30 @@ class Input_user:
         self.move = ""
 
     def entry_user(self):
-        self.move = input("Entrez ZQSD pour vous déplacer : ")
-        return self.move
+        move = self.move
+        move = input("Entrez ZQSD pour vous déplacer : ")
+        return move
 
-entry = Input_user()
+    def entry_raw(self):
+        move = self.move
+        passing = 1
+        while passing == 1:
+            for event in pygame.event.get():
+                if event.type == KEYDOWN:
+                    if event.key == K_s:
+                        move = "s"
+                        return move
+                    if event.key == K_z:
+                        move = "z"
+                        return move
+                    if event.key == K_d:
+                        move = "d"
+                        return move
+                    if event.key == K_q:
+                        move = "q"
+                        return move
+                if event.type == QUIT:
+                    passing = 0
 
 class Characters:
 
@@ -72,6 +92,7 @@ class Motion:
             else:
                 maps = "".join(maps)
                 print(maps)
+                direction = (0, 0)
         if move == "Q" or move == "q":
             if maps[position - 1] == " " or maps[position - 1] == "X" or maps[position - 1] == "Y" or maps[position - 1] == "Z":
                 maps[position - 1] = "M"
@@ -124,10 +145,8 @@ class Items:
         Z = space_list[space_rand]
         maps[Z] = "Z"
         maps = "".join(maps)
-        #print(X, Y, Z)
+        print(X, Y, Z)
         return X, Y, Z
-    
-    #def item_coord(self):
 
 class Collect:
 
@@ -196,7 +215,7 @@ class Calc:
 
         macy = int(position / 16)
         macx = position - 16 * macy
-        maccoord = (macx, macy)
+        maccoord = (macx * 32, macy * 32)
 
         return maccoord
 
@@ -205,7 +224,7 @@ class Calc:
 
         tinay = int((positiontina) / 16)
         tinax = positiontina - 16 * tinay
-        tinacoord = (tinax, tinay)
+        tinacoord = (tinax * 32, tinay * 32)
 
         return tinacoord
 
@@ -217,17 +236,14 @@ class Calc:
         XY = int(X / 16)
         XX = X - 16 * XY
         YY = int(Y / 16)
-        YX = X - 16 * YY
+        YX = Y - 16 * YY
         ZY = int(Z / 16)
-        ZX = X - 16 * ZY
-        Xcoord = (XX, XY)
-        Ycoord = (YX, YY)
-        Zcoord = (ZX, ZY)
+        ZX = Z - 16 * ZY
+        Xcoord = (XX * 32, XY * 32)
+        Ycoord = (YX * 32, YY * 32)
+        Zcoord = (ZX * 32, ZY * 32)
 
         return Xcoord, Ycoord, Zcoord
-
-
-
 
 class Pygame:
 
@@ -237,24 +253,66 @@ class Pygame:
         self.tinacoord = tinacoord
         self.Xcoord = Xcoord
         self.Ycoord = Ycoord
-        self.zcoord = Zcoord
+        self.Zcoord = Zcoord
+        self.mapping()
 
     def mapping(self):
         maps = self.maps
+        i = 0
+        j = 0
+
         pygame.init()
         window = pygame.display.set_mode((480, 480), RESIZABLE)
         space = pygame.image.load("ressource/espace.png").convert()
-        self.position_space = space.get_rect()
+        position_space = space.get_rect()
         wall = pygame.image.load("ressource/mur.png").convert()
-        self.position_wall = wall.get_rect()
-        itemX = pygame.image.load("ressource/item1.png").convert()
-        self.disX = itemX.get_rect()
-        itemY = pygame.image.load("ressource/item2.png").convert()
-        self.disY = itemY.get_rect()
-        itemZ = pygame.image.load("ressource/item3.png").convert()
-        self.disZ = itemZ.get_rect()
+        position_wall = wall.get_rect()
+        while i != 239:
+            if maps[i] == " ":
+                window.blit(space, ((i - (16 * j)) * 32, j * 32))
+                #pygame.display.flip()
+                i = i + 1
+            elif maps[i] == "#":
+                window.blit(wall, ((i - (16 * j)) * 32, j * 32))
+                #pygame.display.flip()
+                i = i + 1
+            elif maps[i] == "\n":
+                j = j + 1
+                i = i + 1
+            else:
+                i = i + 1
+        return window, space
+
+    def item_display(self, window):
+        Xcoord = self.Xcoord
+        Ycoord = self.Ycoord
+        Zcoord = self.Zcoord
+
+        itemX = pygame.image.load("ressource/item1.png").convert_alpha()
+        disX = itemX.get_rect()
+        window.blit(itemX, Xcoord)
+        itemY = pygame.image.load("ressource/item2.png").convert_alpha()
+        disY = itemY.get_rect()
+        window.blit(itemY, Ycoord)
+        itemZ = pygame.image.load("ressource/item3.png").convert_alpha()
+        disZ = itemZ.get_rect()
+        window.blit(itemZ, Zcoord)
+        pygame.display.flip()
     
-    #def graphics(self):
+    def mac_display(self, window, space):
+        maccoord = self.maccoord
+
+        mac = pygame.image.load("ressource/MacGyver.png").convert_alpha()
+        mactemp = mac.get_rect()
+        window.blit(space, mactemp)
+        mactemp = mactemp.move(0, 32)
+        window.blit(mac, mactemp)
+        pygame.display.flip()
+
+        #return position_space, position_wall, disX, disY, disZ
+    
+    #def graphics(self, position_space, position_wall, disX, disY, disZ):
+
 
 
 def open_map():
@@ -267,8 +325,8 @@ def open_map():
 
 def random_count(maps):
     i = 0
-    j = 0    
-    space_count = 0
+    #j = 0    
+    #space_count = 0
     space_list = []
     wall_list = []
     maps = list(maps)
@@ -282,29 +340,33 @@ def random_count(maps):
                 i = i + 1
             else:
                 i = i + 1
-    return space_list
+    return space_list, wall_list
 
 def main():
     maps = open_map()
-    space_list = random_count(maps)
+    space_list, wall_list = random_count(maps)
     position = Characters(maps).mc_position()
     positiontina = Characters(maps).tina_position()
     X, Y, Z = Items(maps, space_list).item_position()
     Xcoord, Ycoord, Zcoord = Calc(position, positiontina, X, Y, Z).coordinates_items()
     maccoord = Calc(position, positiontina, X, Y, Z).coordinates_mac()
     tinacoord = Calc(position, positiontina, X, Y, Z).coordinates_tina()
+    window, space = Pygame(maps, maccoord, tinacoord, Xcoord, Ycoord, Zcoord).mapping()
     #print(Items(maps, space_list).item_coord())
     print("".join(maps))
     while 1:
-        move = entry.entry_user()
+        #move = Input_user().entry_user()
+        Pygame(maps, maccoord, tinacoord, Xcoord, Ycoord, Zcoord).mac_display(window, space)
+        Pygame(maps, maccoord, tinacoord, Xcoord, Ycoord, Zcoord).item_display(window)
+        #Pygame(maps, maccoord, tinacoord, Xcoord, Ycoord, Zcoord).item_display(window)
+        move = Input_user().entry_raw()
         position = Characters(maps).mc_position()
         tina = Tina(X, Y, Z, maps).tina_ready()
-        Motion(maps, position, move, tina).direction()
+        direction = Motion(maps, position, move, tina).direction()
         position = Characters(maps).mc_position()
         #print(position)
         X, Y, Z = Collect(position, X, Y, Z).collect_items()
         print(Calc(position, positiontina, X, Y, Z).coordinates_mac())
-        Pygame(maps, maccoord, tinacoord, Xcoord, Ycoord, Zcoord).mapping()
 
 
 main()
