@@ -207,9 +207,18 @@ class Collect:
 
         return collect
 
-    def check_win(self, mcgyver_position, tina_position):
+    def check_win(self, mcgyver_position, tina_position, window):
+        ending = pygame.image.load("ressource/Victoire.png").convert()
+        victory = ending.get_rect()
         if tuple(mcgyver_position) == tuple(tina_position[0]):
             print("YOU WON")
+            while 1:
+                for event in pygame.event.get():
+                    window.blit(ending, (0, 0))
+                    pygame.display.flip()
+                    if event.type == KEYDOWN:
+                        if event.key == K_q:
+                            quit()
 
 class Pygame:
     def init(self):
@@ -267,7 +276,7 @@ def main():
         print(line)
     while 1:
         mcgyver_position, macX, macY = Character().mcgyver(maps)
-        Collect().check_win(mcgyver_position, tina_position)
+        Collect().check_win(mcgyver_position, tina_position, window)
         Pygame().display_mac(window, mcgyver_position, space)
         move = Input_user().entry_raw()
         collect = Collect().check_items(item_list, mcgyver_position, tina_position, collect)
